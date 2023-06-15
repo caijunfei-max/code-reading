@@ -20,5 +20,6 @@ which i want to learn for my own research
     pubulish(year):2023
 4. *Machine-learning-enabled-high-entropy-alloy-discovery*
     Title: Machine learning-enabled high-entropy alloy discovery
-    doi: Machine learning–enabled high-entropy alloy discovery
+    Journal: Science
+    doi: 10.1126/science.abo4940
     pubulish(year): 2022
