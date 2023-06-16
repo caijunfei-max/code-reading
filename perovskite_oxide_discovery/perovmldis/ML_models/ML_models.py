@@ -14,12 +14,13 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import rc
 from sklearn import preprocessing
 
+# 设置画图的基本参数
 rc('font',**{'family':'serif','serif':['Helvetica']})
-rc('axes', axisbelow=True)
+rc('axes', axisbelow=True) # axisbelow就是设置轴线和网格线要在图的下面
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 def run_perovskite_formability(perovskite_training_data):  
-    cwd = os.getcwd()
+    cwd = os.getcwd() #返回当前进程的工作目录
     feature_list = ['A_HOMO_diff', 'A_HOMO_sum', 'A_IE_diff', 'A_IE_sum', 'A_LUMO_diff', 'A_LUMO_sum', 'A_X_diff', 'A_X_sum',
         'A_Z_radii_diff', 'A_Z_radii_sum', 'A_e_affin_diff', 'A_e_affin_sum', 'B_HOMO_diff', 'B_HOMO_sum', 'B_IE_diff', 'B_IE_sum',
         'B_LUMO_diff', 'B_LUMO_sum', 'B_X_diff', 'B_X_sum', 'B_Z_radii_diff', 'B_Z_radii_sum', 'B_e_affin_diff', 'B_e_affin_sum',
@@ -30,6 +31,7 @@ def run_perovskite_formability(perovskite_training_data):
     clf = RandomForestClassifier(n_jobs=-1, random_state=0, n_estimators =100, max_depth = 22, max_features='auto',min_samples_split = 2, min_samples_leaf =1,class_weight='balanced')
     # Feature importances
     y_score = clf.fit(train_features, train_labels)
+    #也是直接训练，没有使用特别的什么东西改善算法之类的创新
     plot_feature_importance(clf, feature_labels, filename='formability_feature_importance.png', n_features=20, palette="Blues_d", dir_name='formability_results')
     # Classifier performance
     pred = clf.predict(test_features) 

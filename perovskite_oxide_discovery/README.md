@@ -1,7 +1,5 @@
 # A hierarchical ML-aided high-throughput screening framework for the discovery of novel oxide perovskites
 
-![Computational Workflow Schematic](bin/images/fig_3.png)
-
 This set of scripts implements a hierarchical Random Forest (RF)-based ML framework to efficiently screen a large chemically diverse domain for thermodynamically stable double oxide perovskites with wide band gaps. 
 
 The framework implements three classification models (RFC) and one regressioon model (RFR): 
