@@ -27,6 +27,7 @@ import matplotlib.patches as patches
 from matplotlib.patches import Ellipse
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
+from Functions import *
 
 # Here the GMM is applied, you might wonder why 4 is chosen, the answer can be found below
 gm = GaussianMixture(n_components=4, random_state=0, init_params='kmeans').fit(latents) #plot a n_components v.s. Average negative log likelihood
