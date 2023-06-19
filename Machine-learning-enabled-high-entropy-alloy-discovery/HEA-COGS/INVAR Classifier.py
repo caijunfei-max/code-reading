@@ -25,6 +25,7 @@ import matplotlib.patches as patches
 from matplotlib.patches import Ellipse
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
+from Functions import *
 
 # A simple neural network classifier that predicts INVAR based on composition.
 class Classifier(nn.Module): #a very simple classifer with large dropout. intuition here: as simple as possible, given that we only have 2d input

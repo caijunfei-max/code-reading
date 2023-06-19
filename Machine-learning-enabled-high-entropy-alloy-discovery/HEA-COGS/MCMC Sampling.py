@@ -27,6 +27,11 @@ import matplotlib.patches as patches
 from matplotlib.patches import Ellipse
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
+from Functions import *
+
+#猜测cls是INVARclassifier训练出来的模型
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def MCMC(gm, classifier, n_samples, sigma=0.1): #MCMC
     sample_z = []

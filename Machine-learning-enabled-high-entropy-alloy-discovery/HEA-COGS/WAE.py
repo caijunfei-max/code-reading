@@ -27,9 +27,11 @@ import matplotlib.patches as patches
 from matplotlib.patches import Ellipse
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
+from Functions import *
 
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-# root = '/content/'
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+root = '/content/'
 
 sns.set(color_codes=True)
 
