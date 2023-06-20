@@ -1,5 +1,5 @@
-# This is a repositroy stored codes from different excellent papers.
-which i want to learn for my own research
+# A learning repository
+Some blog, some codes
 ## 1. machine learning for materials design
 
 * content
@@ -23,3 +23,11 @@ which i want to learn for my own research
     Journal: Science
     doi: 10.1126/science.abo4940
     pubulish(year): 2022
+
+# 2 ML tutorial
+
+## 2.1 Graphical neural network
+
+1. [graphical neural network in python](https://towardsdatascience.com/graph-neural-networks-in-python-c310c7c18c83)
+2. [introduction to graphical neural network](https://www.datacamp.com/tutorial/comprehensive-introduction-graph-neural-networks-gnns-tutorial)
+
