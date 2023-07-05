@@ -105,11 +105,11 @@ dataset = FeatureDataset(raw_x[:], raw_y[:])   # numpy to tensor
 dataloader = DataLoader(dataset, batch_size=params['batch_size'], shuffle=True)   # tensor to dataloader
 print(raw_x[50:55])
 # %%train the WAE
-model = WAE(raw_x.shape[1]).to(device)   # initialize the model
-optimizer = Adam(model.parameters(), lr=params['lr'], weight_decay=params['weight_decay'])   # optimizer
+model = WAE(raw_x.shape[1]).to(device)   # initialize the model，前六列数据为特征数据，前六列为Fe,Ni,Co,Cr,V,Cu的成分比例
+optimizer = Adam(model.parameters(), lr=params['lr'], weight_decay=params['weight_decay'])   # adam 优化器
 
 
-def train_WAE(model, optimizer, dataloader, params):
+def train_WAE(model, optimizer, dataloader, params):  # 训练模型四要素——实例化模型，实例化优化器，数据以及参数
     model_name = params['model_name']
     num_epoch = params['num_epoch']
     sigma = params['sigma']   # assuming the latent space follows Gaussian
@@ -125,8 +125,8 @@ def train_WAE(model, optimizer, dataloader, params):
         total_recon = []   # binary cross entropy
         total_MMD = []   # maximum mean discrepancy
         
-        for i, data in enumerate(dataloader):
-            x = data[0].to(device)
+        for i, data in enumerate(dataloader):  # enumerate作用于一个可迭代对象，一般用于for循环里面。
+            x = data[0].to(device)  # 一样是返回一个tensor，但是指定存储空间为cuda，详见torch.tensor.to的api
             y = data[1].to(device)
             model.train() # model goes to train mode
             recon_x, z_tilde = model(x)   # latent space is Z_tilde

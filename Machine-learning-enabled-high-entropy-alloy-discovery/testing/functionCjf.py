@@ -11,7 +11,7 @@ from torch.utils.data import Dataset
 
 
 class FeatureDataset(Dataset):
-    def __int__(self, x, y):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
     # 初始化类,且必须输入x, y两个参数
