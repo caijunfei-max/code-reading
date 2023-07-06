@@ -1,7 +1,7 @@
 # A learning repository
 Some blog, some codes
 ## 1. machine learning for materials design
-
+test
 * content
 1. *Bayesian_Optimization_Material_design* 
     Title:Active learning for accelerated design of layered materials
