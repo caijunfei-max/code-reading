@@ -69,12 +69,12 @@ class WAE(nn.Module):
                         nn.Linear(80, self.input_size),
                         nn.Softmax(dim=1)   # (softmax along dimension 1)
                         )
-        self.apply(weights_init)
+        self.apply(weights_init)  # applying the initialization of weight and bias
 
     
     def forward(self, x):
-        z = self._encode(x)
-        x_recon = self._decode(z)
+        z = self._encode(x)        # 编码数据
+        x_recon = self._decode(z)  # x_recon重新解码后的数据
 
         return x_recon, z
 
@@ -109,7 +109,7 @@ model = WAE(raw_x.shape[1]).to(device)   # initialize the model，前六列数�
 optimizer = Adam(model.parameters(), lr=params['lr'], weight_decay=params['weight_decay'])   # adam 优化器
 
 
-def train_WAE(model, optimizer, dataloader, params):  # 训练模型四要素——实例化模型，实例化优化器，数据以及参数
+def train_WAE(model, optimizer, dataloader, params):  # WAE训练模型四要素——实例化模型，实例化优化器，数据以及参数
     model_name = params['model_name']
     num_epoch = params['num_epoch']
     sigma = params['sigma']   # assuming the latent space follows Gaussian
@@ -129,10 +129,11 @@ def train_WAE(model, optimizer, dataloader, params):  # 训练模型四要素—
             x = data[0].to(device)  # 一样是返回一个tensor，但是指定存储空间为cuda，详见torch.tensor.to的api
             y = data[1].to(device)
             model.train() # model goes to train mode
-            recon_x, z_tilde = model(x)   # latent space is Z_tilde
+            recon_x, z_tilde = model(x)   # latent space is Z_tilde，输入特征数据到模型中
             z = sigma*torch.randn(z_tilde.size()).to(device)   # z is sampled from a Gaussian that has the same dimension (but no relation to z_tilde).
 
-            recon_loss = F.binary_cross_entropy(recon_x, x, reduction='mean') # lowest reconstruction loss
+            recon_loss = F.binary_cross_entropy(recon_x, x, reduction='mean')
+            # 算编码解码后的recon_x和原来的数据x之间的区别,reduction=‘mean’设置最后对输出进行一个平均化。
             # recon_loss = F.mse_loss(recon_x, x, reduction='mean')
             # recon_loss = F.l1_loss(recon_x, x, reduction='mean')
             
@@ -143,15 +144,19 @@ def train_WAE(model, optimizer, dataloader, params):  # 训练模型四要素—
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            # 优化的基本步骤，
+            # zero_grad在进行后向传播之前将梯度设置为零，避免一个batch中梯度计算受到上一个batch的影响
+            # loss.backward实施后向传播算法计算梯度
+            # 基于backward算出来的梯度以及超参数进行一次weight和bias的参数更新。每一个batch会进行一次这样的计算
 
             total_loss.append(loss.item())  # from tensor to values
             total_recon.append(recon_loss.item())
-            total_MMD.append(MMD_loss.item())
+            total_MMD.append(MMD_loss.item())  # 用item()从张量中取出数据并且存在列表中
 
         avg_loss = sum(total_loss)/len(total_loss)
         avg_recon = sum(total_recon)/len(total_recon)
         avg_MMD = sum(total_MMD)/len(total_MMD)
-        loss_.append(avg_loss)
+        loss_.append(avg_loss)  # 求三种类型损失函数的平均值
 
         #scheduler.step(avg_loss)
 
@@ -159,11 +164,13 @@ def train_WAE(model, optimizer, dataloader, params):  # 训练模型四要素—
                                         epoch+1, num_epoch, \
                                         avg_loss, \
                                         avg_recon, avg_MMD, time.time() - start_time))
+        # 显示优化流程
+
         # save the model every 5 epoches
         if (epoch+1) % 5 == 0:
             save_model_dir = str(model_name + "_{}.pth".format(epoch+1))
             torch.save(model.state_dict(), os.path.join(folder_dir, save_model_dir))
-    return loss_
+    return loss_ # 返回损失值列表
 
 loss_=train_WAE(model, optimizer, dataloader, params)
 plt.figure()

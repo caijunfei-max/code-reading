@@ -35,7 +35,7 @@ class AttributeDataset(Dataset): # this is for classifier
     def __getitem__(self, idx):
         return torch.Tensor(self.x[idx]), torch.Tensor(self.y[idx])
 
-def weights_init(m):
+def weights_init(m):  # 参数初始化函数，包括weight和bias
     classname = m.__class__.__name__
     if classname.find('BatchNorm') != -1:
         m.weight.data.normal_(1.0, 0.02)
@@ -62,7 +62,7 @@ def get_latents(model, dataset): #from dataset to altten
             latents.append(z.detach().cpu().numpy())
     return np.concatenate(latents,axis=0)
 
-def imq_kernel(X: torch.Tensor, Y: torch.Tensor, h_dim: int): # common kerntl to choose
+def imq_kernel(X: torch.Tensor, Y: torch.Tensor, h_dim: int): # common kernel to choose
     batch_size = X.size(0)
 
     norms_x = X.pow(2).sum(1, keepdim=True)  # batch_size x 1
