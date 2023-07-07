@@ -174,7 +174,7 @@ def train_WAE(model, optimizer, dataloader, params):  # WAE训练模型四要素
 
 loss_=train_WAE(model, optimizer, dataloader, params)
 plt.figure()
-sns.set_style('ticks')
+sns.set_style('ticks')  # 设置图画背景的
 plt.plot(range(len(loss_)), loss_)
 # %%Double check on the reconstructed compositions
 # one way to find out whether WAE (or any other VAE) has learned the repsentation is
