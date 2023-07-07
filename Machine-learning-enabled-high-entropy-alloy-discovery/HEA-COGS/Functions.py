@@ -9,6 +9,9 @@ import numpy as np
 import random
 from torch.utils.data import Dataset, DataLoader
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
 class FeatureDataset(Dataset): #from numpy to tensor (pytroch-readable)
     '''
     Args: x is a 2D numpy array [x_size, x_features]

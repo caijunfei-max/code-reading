@@ -31,7 +31,7 @@ from Functions import *
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-root = '/content/'
+root = '/content/'  # 无效路径，只是用来合成新的路径,原文写的是/content/，所以所有模型都会存在D盘
 
 sns.set(color_codes=True)
 
@@ -97,7 +97,7 @@ params = {
     'MMD_lambda': 1e-4,
     'model_name': 'WAE_v1',
 } # for WAE training
-all = pd.read_csv('data_base.csv', header=0).iloc[:, 1:19].to_numpy()
+all = pd.read_csv('../data_base.csv', header=0).iloc[:, 1:19].to_numpy()
 # header把第一行当作是名称，选取所有行，1到18列作为数据并且转为numpy.array格式
 raw_x = all[:696,:6]
 raw_y = all[:696,17].reshape(-1,1)
@@ -164,29 +164,36 @@ def train_WAE(model, optimizer, dataloader, params):  # WAE训练模型四要素
                                         epoch+1, num_epoch, \
                                         avg_loss, \
                                         avg_recon, avg_MMD, time.time() - start_time))
-        # 显示优化流程
+        # 优化过程的log内容
 
-        # save the model every 5 epoches
+        # save the model every 5 epoches 每5个epoch存一次模型到
         if (epoch+1) % 5 == 0:
             save_model_dir = str(model_name + "_{}.pth".format(epoch+1))
             torch.save(model.state_dict(), os.path.join(folder_dir, save_model_dir))
     return loss_ # 返回损失值列表
 
 loss_=train_WAE(model, optimizer, dataloader, params)
-plt.figure()
-sns.set_style('ticks')  # 设置图画背景的
+
+plt.figure()  # 打开画布
+
+"""
+sns.set_style('ticks')  # 设置背景为
 plt.plot(range(len(loss_)), loss_)
+plt.show()  # 这个画出来的结果是总loss的变化图，类似原论文SI中figure S3（si中的图是reconstruction的loss）
+"""
+
 # %%Double check on the reconstructed compositions
 # one way to find out whether WAE (or any other VAE) has learned the repsentation is
 # to compare the reconstructed and original compositions.if you are not happy with the 
 # reconstruction. go back to the previous step and change the params.
 # double check on the recontructed compositions
 # t = time.localtime()
+"""
 model_dir = os.path.join(root, '{}/{}_{}.pth'.format(params['model_name'], params['model_name'],params['num_epoch']))#load your model
 model = WAE(raw_x.shape[1]).to(device)
 model.load_state_dict(torch.load(model_dir))
-model.eval()
-with torch.no_grad():
+model.eval()  # 把模型的模式改为评估模式（前面设置为了训练模式）
+with torch.no_grad(): #关闭梯度计算
     test = torch.FloatTensor(raw_x).to(device)
     recon_x, z = model(test)
     recon_x = model.decoder(z)
@@ -195,15 +202,19 @@ with torch.no_grad():
 column_name = ['Fe', 'Ni', 'Co', 'Cr', 'V', 'Cu']  # 'VEC','AR1','AR2','PE','Density','TC','MP','FI','SI','TI','M']
 # recon_x = (recon_x * (max-min)) + min
 pd.DataFrame(recon_x.round(3), columns=column_name).loc[690:695]
-csv_data = pd.read_csv('data_base.csv', header=0).iloc[:,1:19]
+csv_data = pd.read_csv('../data_base.csv', header=0).iloc[:,1:19]
 csv_data.iloc[690:702,:6].round(3)
+"""
+
+
+""" #暂时将这里的代码注释掉
 # %%Visualize the WAE latent space
 # Here we assign different colors to alloy with and without Copper, as we expected them to differ significantly in the latent space.
 sns.set_style('ticks')
 model = WAE(raw_x.shape[1]).to(device)
-model.load_state_dict(torch.load(model_dir))
-dataset = FeatureDataset(raw_x[:], raw_y[:])
-latents = get_latents(model, dataset)
+model.load_state_dict(torch.load(model_dir)) 
+dataset = FeatureDataset(raw_x[:], raw_y[:]) 
+latents = get_latents(model, dataset) 
 
 low_cu = raw_x[:,5] < 0.05
 low_cu_latent = latents[low_cu]
@@ -255,3 +266,4 @@ axs.legend(handles, labels, loc='upper right', bbox_to_anchor=(1.015,1.017), han
 # axs.add_patch(rect)
 
 fig.savefig('Figure3_a.tif', bbox_inches = 'tight', pad_inches=0.01)
+"""
