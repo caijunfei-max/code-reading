@@ -53,7 +53,7 @@ class WAE(nn.Module):
                         nn.LayerNorm(48),
                         nn.ReLU(),
                         nn.Linear(48, 2),
-                        )
+                        )   # 3层，神经元数量分别是80，64，48，每一层神经层后面都有标准化层以及一个激活函数层
 
         # decoder
         self.decoder = nn.Sequential(
@@ -68,7 +68,7 @@ class WAE(nn.Module):
                         nn.ReLU(),
                         nn.Linear(80, self.input_size),
                         nn.Softmax(dim=1)   # (softmax along dimension 1)
-                        )
+                        )  # 解码模型和编码模型的结构相同，但是层的作用相反
         self.apply(weights_init)  # applying the initialization of weight and bias
 
     
@@ -100,10 +100,10 @@ params = {
 all = pd.read_csv('../data_base.csv', header=0).iloc[:, 1:19].to_numpy()
 # header把第一行当作是名称，选取所有行，1到18列作为数据并且转为numpy.array格式
 raw_x = all[:696,:6]
-raw_y = all[:696,17].reshape(-1,1)
+raw_y = all[:696,17].reshape(-1, 1)
 dataset = FeatureDataset(raw_x[:], raw_y[:])   # numpy to tensor
 dataloader = DataLoader(dataset, batch_size=params['batch_size'], shuffle=True)   # tensor to dataloader
-print(raw_x[50:55])
+# print(raw_x[50:55])
 # %%train the WAE
 model = WAE(raw_x.shape[1]).to(device)   # initialize the model，前六列数据为特征数据，前六列为Fe,Ni,Co,Cr,V,Cu的成分比例
 optimizer = Adam(model.parameters(), lr=params['lr'], weight_decay=params['weight_decay'])   # adam 优化器
@@ -194,9 +194,9 @@ model = WAE(raw_x.shape[1]).to(device)
 model.load_state_dict(torch.load(model_dir))
 model.eval()  # 把模型的模式改为评估模式（前面设置为了训练模式）
 with torch.no_grad(): #关闭梯度计算
-    test = torch.FloatTensor(raw_x).to(device)
-    recon_x, z = model(test)
-    recon_x = model.decoder(z)
+    test = torch.FloatTensor(raw_x).to(device)  # 转为cpu格式的张量，因为WAE是训练解码后的特征和原来的特征之间映射的联系，因此原始特征数据是目标数据。
+    recon_x, z = model(test)  # 输入测试模式的数据
+    recon_x = model.decoder(z)  # 将z解码为原来的数据，后面用于判断z和recon_x之间的
     recon_x = recon_x.cpu().detach().numpy()
 
 column_name = ['Fe', 'Ni', 'Co', 'Cr', 'V', 'Cu']  # 'VEC','AR1','AR2','PE','Density','TC','MP','FI','SI','TI','M']
