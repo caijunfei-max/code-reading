@@ -14,6 +14,7 @@ import pandas as pd
 root = '/content/'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+
 class WAE(nn.Module):
     def __init__(self, input_size):
         super(WAE, self).__init__()
@@ -81,5 +82,5 @@ for i, data in enumerate(dataloader):
     x = data[0].to(device)
     model.train()
     recon_x, z_tilde = model(x)
-    print(recon_x, z_tilde)
-
+    print("recon_x{0}".format(i), recon_x)
+    print("z_tilde{0}".format(i), data)

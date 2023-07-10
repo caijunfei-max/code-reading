@@ -30,7 +30,7 @@ import seaborn as sns
 from Functions import *
 
 # Here the GMM is applied, you might wonder why 4 is chosen, the answer can be found below
-gm = GaussianMixture(n_components=4, random_state=0, init_params='kmeans').fit(latents) #plot a n_components v.s. Average negative log likelihood
+gm = GaussianMixture(n_components=4, random_state=0, init_params='kmeans').fit(latents) # plot a n_components v.s. Average negative log likelihood
 print('Average negative log likelihood:', -1*gm.score(latents))
 plot_gmm(gm, latents)
 
@@ -48,7 +48,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_style("darkgrid")
 plt.figure()
-plt.scatter(range(1,8), scores,color='green')
+plt.scatter(range(1,8), scores, color='green')
 plt.plot(range(1,8),scores)
 plt.savefig('elbow_plot.png', format='png', dpi=300)
 plt.show()

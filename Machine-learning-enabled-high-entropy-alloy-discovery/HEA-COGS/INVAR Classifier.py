@@ -46,6 +46,7 @@ class Classifier(nn.Module): #a very simple classifer with large dropout. intuit
 from matplotlib.pyplot import MultipleLocator
 same_seeds(1)
 
+params=[]
 params['cls_bs'] = 16
 params['cls_lr'] = 1e-4
 params['cls_epoch'] = 100
@@ -123,7 +124,7 @@ def training_Cls(model, optimizer, params):
     plt.plot(x, test_acc, linestyle=':', c='steelblue')
     plt.legend(["train_accuracy", "test_accuracy"])
     ax.xaxis.set_major_locator(x_major_locator)
-    plt.savefig('figure/binary_classifier.png',dpi=300)
+    plt.savefig('figure/binary_classifier.png', dpi=300)
     return train_acc, test_acc
 
 train_acc, test_acc = training_Cls(cls, opt, params)

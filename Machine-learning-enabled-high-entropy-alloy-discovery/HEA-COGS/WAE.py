@@ -130,6 +130,7 @@ def train_WAE(model, optimizer, dataloader, params):  # WAE训练模型四要素
             y = data[1].to(device)
             model.train() # model goes to train mode
             recon_x, z_tilde = model(x)   # latent space is Z_tilde，输入特征数据到模型中
+            # recon_x是某次编码下的特征（每次训练都会优化），z_tilde是原始数据（data_base）的前六列数据包括铁、镍、钴、铬和铜的比例。
             z = sigma*torch.randn(z_tilde.size()).to(device)   # z is sampled from a Gaussian that has the same dimension (but no relation to z_tilde).
 
             recon_loss = F.binary_cross_entropy(recon_x, x, reduction='mean')

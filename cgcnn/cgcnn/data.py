@@ -1,4 +1,5 @@
 from __future__ import print_function, division
+# 把未来版本的特性引入到当前代码，避免出现不兼容的问题
 
 import csv
 import functools
