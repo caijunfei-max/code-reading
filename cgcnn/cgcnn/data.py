@@ -1,5 +1,9 @@
+"""
+数据初始化和处理的几个类
+"""
+
 from __future__ import print_function, division
-# 把未来版本的特性引入到当前代码，避免出现不兼容的问题
+# 把未来版本的特性引入到当前代码，避免出现不兼容的问题，比如python2里面的代码中可以使用一些python3的代码
 
 import csv
 import functools
@@ -53,7 +57,7 @@ def get_train_val_test_loader(dataset, collate_fn=default_collate,
     total_size = len(dataset)
     if kwargs['train_size'] is None:
         if train_ratio is None:
-            assert val_ratio + test_ratio < 1
+            assert val_ratio + test_ratio < 1  # 判断，返回false时触发异常
             train_ratio = 1 - val_ratio - test_ratio
             print(f'[Warning] train_ratio is None, using 1 - val_ratio - '
                   f'test_ratio = {train_ratio} as training data.')
@@ -221,7 +225,7 @@ class AtomInitializer(object):
         return self._embedding
 
     def decode(self, idx):
-        if not hasattr(self, '_decodedict'):
+        if not hasattr(self, '_decodedict'):  # hasattr用于判断内容是否有对应的属性
             self._decodedict = {idx: atom_type for atom_type, idx in
                                 self._embedding.items()}
         return self._decodedict[idx]
@@ -252,6 +256,7 @@ class AtomCustomJSONInitializer(AtomInitializer):
 
 class CIFData(Dataset):
     """
+    一个打包cif的打包器
     The CIFData dataset is a wrapper for a dataset where the crystal structures
     are stored in the form of CIF files. The dataset should have the following
     directory structure:
