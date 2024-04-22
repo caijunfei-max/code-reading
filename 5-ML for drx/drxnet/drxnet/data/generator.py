@@ -43,6 +43,8 @@ compositionMass_list = [6.94, 24.305, 26.982,
                         15.999, 18.998]
 
 def generate_composition_vector(comp_dict):
+    # 对composition数据进行阅读，输出包括，成分向量，成分的重量， 锂的数量，这里的comp_dict的形式如作者开源的json数据
+    # 成分向量：一个用于类似稀疏矩阵的数据，不是01稀疏矩阵，应该是带有含量的
     comp_vec = np.zeros(len(composition_list))
     comp_mass = 0
     for key in comp_dict.keys():
@@ -74,12 +76,12 @@ class convert_csvData_Q0_Q:
         self.low_V = std_data['low_voltage(V)']
         self.high_V = std_data['high_voltage(V)']
         self.total_cycle_num = len(std_data[cdc_info])
-        self.profileInformation = std_data[cdc_info]
+        self.profileInformation = std_data[cdc_info] # 把json数据中的放电信息存在这个变量，包括电压和电荷（100等分）
 
         self.maxCycleNumber = maxCycleNumber
 
         comp_vector, comp_mass, num_Li = generate_composition_vector(self.comp_dict)
-        self.theory_Q = num_Li * 96485 / (3.6 * comp_mass)
+        self.theory_Q = num_Li * 96485 / (3.6 * comp_mass) # 计算理论容量
 
 
     def write_lines(self, out_path, sample_ratio = 0.1, init_count = 0):
@@ -97,6 +99,7 @@ class convert_csvData_Q0_Q:
 
 
         for _info in self.profileInformation:
+            # 每个_info都是个字典，键为：cycle_num, v_exp, q_exp，第一个的值为数字，第二个和第三个是含电压和电荷的信息列表
             cycle_number = _info['cycle_num']
 
             V_std = np.array(_info['V_std'])
